@@ -32,7 +32,7 @@ function HomePage() {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:8080/api/v1/product/product-list/${page}`
+        `https://hma-backend.onrender.com/api/v1/product/product-list/${page}`
       );
       setLoading(false);
       if (data.success) setProducts(data.products);
@@ -45,7 +45,7 @@ function HomePage() {
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:8080/api/v1/category/get-category"
+        "https://hma-backend.onrender.com/api/v1/category/get-category"
       );
       if (data?.success) {
         setCategories(data?.category);
@@ -58,7 +58,7 @@ function HomePage() {
   const getTotal = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:8080/api/v1/product/product-count"
+        "https://hma-backend.onrender.com/api/v1/product/product-count"
       );
       setTotal(data?.total);
     } catch (error) {
@@ -75,7 +75,7 @@ function HomePage() {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:8080/api/v1/product/product-list/${page}`
+        `https://hma-backend.onrender.com/api/v1/product/product-list/${page}`
       );
       setLoading(false);
       if (data.success) setProducts([...products, ...data?.products]);
@@ -93,7 +93,7 @@ function HomePage() {
   const filterProduct = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/api/v1/product/product-filters",
+        "https://hma-backend.onrender.com/api/v1/product/product-filters",
         {
           checked,
           radio,
