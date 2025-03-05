@@ -5,15 +5,24 @@ import toast from "react-hot-toast";
 import SearchForm from "./../Pages/form/SearchForm";
 import useCategory from "../hooks/useCategory.jsx";
 import { useCart } from "../context/CartContext.jsx";
+import {
+  MenuOutlined,
+  HomeOutlined,
+  UserOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  DashboardOutlined,
+  MedicineBoxOutlined,
+  AlertOutlined,
+} from "@ant-design/icons";
+import { Drawer, Button, Dropdown, Menu } from "antd";
 
 function Header() {
   const [auth, setAuth] = useAuth();
   const { cart } = useCart();
   const categories = useCategory();
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
-  );
-  const [hover, setHover] = useState(false);
+  const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
     const element = document.documentElement;
@@ -32,180 +41,190 @@ function Header() {
       user: null,
       token: "",
     });
-
     localStorage.removeItem("auth");
-    toast.success("logged out succesfully");
+    toast.success("Logged out successfully");
   };
 
+  // Category Dropdown Menu
+  const categoryMenu = (
+    <Menu>
+      <Menu.Item key="all-categories">
+        <Link to="/category">All Categories</Link>
+      </Menu.Item>
+      {categories?.map((c) => (
+        <Menu.Item key={c.slug}>
+          <Link to={`/category/${c.slug}`}>{c.name}</Link>
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
+  // User Dropdown Menu
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
+        <NavLink to={`/dashboard/${auth?.user?.role === 1 ? "admin" : "user"}`}>
+          Dashboard
+        </NavLink>
+      </Menu.Item>
+      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
-    <div className="navbar bg-[#bfe1f4] fixed z-10 h-1 p-10">
-      <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <NavLink to="/" className="hover:border-b-2">
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/category">Category</NavLink>
-            </li>
-            <li>
-              <NavLink to="/register">Register</NavLink>
-            </li>
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
-          </ul>
-        </div>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo */}
         <NavLink
           to="/"
-          className="btn btn-ghost text-2xl font-bold tracking-wide text-black hover:text-blue-800 transition-colors duration-200 p-2"
+          className="text-2xl font-bold text-white flex items-center space-x-2 hover:text-gray-200 transition-colors"
         >
-          Hospital
+          <MedicineBoxOutlined />
+          <span className="hidden sm:inline">Hospital Management</span>
         </NavLink>
-      </div>
-      <div className="navbar-center hidden lg:flex mt-3">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <NavLink to="/" className="hover:border-b-2">
-              Home
-            </NavLink>
-          </li>
-          <li className="">
-            <details className="dropdown">
-              <summary className="" onMouseEnter={() => setHover(true)}>
-                category
-              </summary>
-              <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                <li>
-                  <Link to="/category">All categories</Link>
-                </li>
-                {hover &&
-                  categories?.map((c) => {
-                    return (
-                      <li className="m-1" key={c.id}>
-                        <Link to={`/category/${c.slug}`}>{c.name}</Link>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </details>
-          </li>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center space-x-6">
+          <NavLink
+            to="/"
+            className="text-white hover:text-cyan-200 transition-colors flex items-center space-x-1"
+          >
+            <HomeOutlined />
+            <span>Home</span>
+          </NavLink>
+
+          {/* Category Dropdown */}
+          <Dropdown overlay={categoryMenu} placement="bottomCenter">
+            <a className="text-white hover:text-cyan-200 transition-colors flex items-center space-x-1">
+              <MedicineBoxOutlined />
+              <span>Categories</span>
+            </a>
+          </Dropdown>
+
+          {/* Authentication Links */}
           {!auth.user ? (
             <>
-              <li>
-                <NavLink to="/register" className="hover:border-b-2">
-                  Register
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/login" className="hover:border-b-2">
-                  Login
-                </NavLink>
-              </li>
+              <NavLink
+                to="/register"
+                className="text-white hover:text-cyan-200 transition-colors flex items-center space-x-1"
+              >
+                <UserOutlined />
+                <span>Register</span>
+              </NavLink>
+              <NavLink
+                to="/login"
+                className="text-white hover:text-cyan-200 transition-colors flex items-center space-x-1"
+              >
+                <LoginOutlined />
+                <span>Login</span>
+              </NavLink>
             </>
           ) : (
-            <>
-              <li>
-                <details>
-                  <summary>{auth?.user?.name}</summary>
-                  <ul className="bg-base-100 rounded-t-none p-2 z-10">
-                    <li>
-                      <NavLink
-                        to={`/dashboard/${
-                          auth?.user?.role === 1 ? "admin" : "user"
-                        }`}
-                      >
-                        Dashboard
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        onClick={handleLogout}
-                        to="/"
-                        className="hover:border-b-2"
-                      >
-                        Logout
-                      </NavLink>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-            </>
+            <Dropdown overlay={userMenu} placement="bottomCenter">
+              <a className="text-white hover:text-cyan-200 transition-colors flex items-center space-x-1">
+                <UserOutlined />
+                <span>{auth?.user?.name}</span>
+              </a>
+            </Dropdown>
           )}
-          <li>
-            {/* <label className="flex cursor-pointer gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-              </svg>
-              <input
-                type="checkbox"
-                value="synthwave"
-                className="toggle theme-controller"
-                onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
-                checked={theme === "dark"}
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
-            </label> */}
-          </li>
-        </ul>
-        <div className="mb-2">
+
+          {/* Search and Cart */}
+          <div className="flex items-center space-x-4">
+            <SearchForm />
+            <NavLink
+              to="/cart"
+              className="bg-red-500 text-white px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-red-600 transition-colors"
+            >
+              <AlertOutlined />
+              <span>Critical: {cart?.length}</span>
+            </NavLink>
+          </div>
+        </nav>
+
+        {/* Mobile Navigation */}
+        <div className="lg:hidden flex items-center space-x-4">
           <SearchForm />
+          <NavLink
+            to="/cart"
+            className="bg-red-500 text-white px-3 py-2 rounded-full flex items-center space-x-1 hover:bg-red-600 transition-colors"
+          >
+            <AlertOutlined />
+            <span>{cart?.length}</span>
+          </NavLink>
+          <Button
+            type="text"
+            icon={<MenuOutlined className="text-white text-2xl" />}
+            onClick={() => setMobileMenuVisible(true)}
+          />
         </div>
-      </div>
-      <div className="navbar-end">
-        <NavLink
-          to="/cart"
-          className="bg-red-500 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out flex items-center space-x-2"
+
+        {/* Mobile Drawer Menu */}
+        <Drawer
+          title="Menu"
+          placement="right"
+          onClose={() => setMobileMenuVisible(false)}
+          visible={mobileMenuVisible}
+          className="lg:hidden"
         >
-          <span>🚨</span>
-          <span>Critical Patients: {cart?.length}</span>
-        </NavLink>
+          <Menu mode="vertical">
+            <Menu.Item key="home" icon={<HomeOutlined />}>
+              <NavLink to="/">Home</NavLink>
+            </Menu.Item>
+
+            <Menu.SubMenu
+              key="categories"
+              icon={<MedicineBoxOutlined />}
+              title="Categories"
+            >
+              <Menu.Item key="all-categories">
+                <Link to="/category">All Categories</Link>
+              </Menu.Item>
+              {categories?.map((c) => (
+                <Menu.Item key={c.slug}>
+                  <Link to={`/category/${c.slug}`}>{c.name}</Link>
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
+
+            {!auth.user ? (
+              <>
+                <Menu.Item key="register" icon={<UserOutlined />}>
+                  <NavLink to="/register">Register</NavLink>
+                </Menu.Item>
+                <Menu.Item key="login" icon={<LoginOutlined />}>
+                  <NavLink to="/login">Login</NavLink>
+                </Menu.Item>
+              </>
+            ) : (
+              <Menu.SubMenu
+                key="user"
+                icon={<UserOutlined />}
+                title={auth?.user?.name}
+              >
+                <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
+                  <NavLink
+                    to={`/dashboard/${
+                      auth?.user?.role === 1 ? "admin" : "user"
+                    }`}
+                  >
+                    Dashboard
+                  </NavLink>
+                </Menu.Item>
+                <Menu.Item
+                  key="logout"
+                  icon={<LogoutOutlined />}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Menu.Item>
+              </Menu.SubMenu>
+            )}
+          </Menu>
+        </Drawer>
       </div>
-    </div>
+    </header>
   );
 }
 

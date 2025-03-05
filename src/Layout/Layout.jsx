@@ -12,7 +12,6 @@ function Layout({ children }) {
         {children}
       </main>
       <Footer />
-      min-h-[70vh]
     </div>
   );
 }
