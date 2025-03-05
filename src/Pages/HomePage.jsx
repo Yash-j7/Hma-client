@@ -7,7 +7,12 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth.jsx";
 import { useCart } from "../context/CartContext.jsx";
-
+import {
+  FilterOutlined,
+  InfoCircleOutlined,
+  PlusCircleOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
 const { Meta } = Card;
 
 function HomePage() {
