@@ -28,6 +28,107 @@ function HomePage() {
     decreaseQuantity,
     removeFromCart,
   } = useCart();
+  const getProducts = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:8080/api/v1/product/product-list/${page}`
+      );
+      setLoading(false);
+      if (data.success) setProducts(data.products);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const getAllCategory = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8080/api/v1/category/get-category"
+      );
+      if (data?.success) {
+        setCategories(data?.category);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTotal = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8080/api/v1/product/product-count"
+      );
+      setTotal(data?.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (page == 1) return;
+    loadmore();
+  }, [page]);
+
+  const loadmore = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:8080/api/v1/product/product-list/${page}`
+      );
+      setLoading(false);
+      if (data.success) setProducts([...products, ...data?.products]);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  const truncateDescription = (description, maxLength = 15) => {
+    if (description.length > maxLength) {
+      return description.substring(0, maxLength) + "...";
+    }
+    return description;
+  };
+  const filterProduct = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8080/api/v1/product/product-filters",
+        {
+          checked,
+          radio,
+        }
+      );
+      setProducts(data?.products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllCategory();
+    getTotal();
+  }, []);
+
+  useEffect(() => {
+    if (!checked.length && !radio.length) getProducts();
+  }, [checked.length, radio.length]);
+
+  useEffect(() => {
+    if (checked.length || radio.length) filterProduct();
+  }, [checked, radio]);
+
+  const handleFilter = (value, id) => {
+    let all = [...checked];
+    if (value) {
+      all.push(id);
+    } else {
+      all = all.filter((c) => c !== id);
+    }
+    setChecked(all);
+  };
+  const location = useLocation();
+  const shouldRenderButton = location.pathname === "/";
 
   // ... existing API calls remain the same ...
 
