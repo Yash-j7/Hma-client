@@ -130,23 +130,22 @@ function HomePage() {
   const location = useLocation();
   const shouldRenderButton = location.pathname === "/";
 
-  // ... existing API calls remain the same ...
-
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-gray-50">
         {/* Mobile Filter Toggle */}
         <div className="lg:hidden flex justify-end mb-4">
           <Button
+            icon={<FilterOutlined />}
             onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-            className="w-full"
+            className="w-full bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
           >
             {mobileFilterOpen ? "Hide Filters" : "Show Filters"}
           </Button>
         </div>
 
         {/* Responsive Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Filter Section - Responsive */}
           <div
             className={`
@@ -154,24 +153,30 @@ function HomePage() {
             lg:block 
             lg:col-span-3 
             bg-white 
-            shadow-md 
-            rounded-md 
-            p-4 
+            shadow-lg 
+            rounded-xl 
+            p-6 
             mb-4 
             lg:mb-0
+            transform transition-all duration-300 hover:shadow-xl
           `}
           >
-            <h3 className="text-xl font-semibold mb-4">Filters</h3>
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-3">
+              <FilterOutlined className="mr-3 text-blue-500" />
+              Filters
+            </h3>
 
             {/* Category Filter - Responsive */}
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold mb-2">Category</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2">
+            <div className="mb-6">
+              <h4 className="text-md font-semibold mb-4 text-gray-700">
+                Category
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-3">
                 {categories?.map((c) => (
                   <Checkbox
                     key={c._id}
                     onChange={(e) => handleFilter(e.target.checked, c._id)}
-                    className="w-full"
+                    className="w-full hover:bg-blue-50 p-2 rounded transition-colors"
                   >
                     {c.name}
                   </Checkbox>
@@ -180,15 +185,19 @@ function HomePage() {
             </div>
 
             {/* Age Filter - Responsive */}
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold mb-2">Age</h3>
+            <div className="mb-6">
+              <h4 className="text-md font-semibold mb-4 text-gray-700">Age</h4>
               <Radio.Group
                 onChange={(e) => setRadio(e.target.value)}
                 className="w-full"
               >
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-3">
                   {Age?.map((p) => (
-                    <Radio key={p._id} value={p.array} className="w-full">
+                    <Radio
+                      key={p._id}
+                      value={p.array}
+                      className="w-full hover:bg-blue-50 p-2 rounded transition-colors"
+                    >
                       {p.name}
                     </Radio>
                   ))}
@@ -198,7 +207,8 @@ function HomePage() {
 
             <Button
               type="danger"
-              className="w-full mt-4"
+              icon={<ReloadOutlined />}
+              className="w-full mt-4 bg-red-500 text-white hover:bg-red-600 transition-all duration-300"
               onClick={() => window.location.reload()}
             >
               Reset Filters
@@ -207,47 +217,69 @@ function HomePage() {
 
           {/* Products Section - Responsive */}
           <div className="lg:col-span-9">
-            <h1 className="text-center text-3xl sm:text-4xl lg:text-5xl font-semibold font-mono text-sky-700 mb-8 mt-5 md:mt-1">
-              Patients
+            <h1 className="text-center text-4xl lg:text-5xl font-bold font-sans text-blue-600 mb-10 animate-pulse">
+              Patient Management
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products?.map((p) => (
                 <Card
                   key={p._id}
                   hoverable
-                  className="rounded-lg shadow-md"
+                  className="rounded-xl shadow-lg overflow-hidden 
+                    transform transition-all duration-300 
+                    hover:scale-105 hover:shadow-2xl 
+                    group bg-white"
                   cover={
-                    <img
-                      alt={p.name}
-                      src={`https://hma-backend.onrender.com/api/v1/product/product-photo/${p._id}`}
-                      className="h-48 sm:h-56 lg:h-64 w-full object-cover rounded-t-lg"
-                    />
+                    <div className="overflow-hidden">
+                      <img
+                        alt={p.name}
+                        src={`https://hma-backend.onrender.com/api/v1/product/product-photo/${p._id}`}
+                        className="h-48 sm:h-56 lg:h-64 w-full object-cover 
+                          transition-transform duration-300 
+                          group-hover:scale-110"
+                      />
+                    </div>
                   }
                 >
-                  <Meta title={p.name} />
-                  <div className="mt-2 font-semibold text-sm">
+                  <Meta
+                    title={
+                      <div className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                        {p.name}
+                      </div>
+                    }
+                  />
+                  <div className="mt-3 text-sm text-gray-600 line-clamp-2">
                     {truncateDescription(p.description)}
                   </div>
-                  <div className="flex flex-col sm:flex-row justify-between items-center mt-3 space-y-2 sm:space-y-0">
-                    <p className="text-lg font-semibold">Age: {p.price}</p>
-                    <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="mt-4 flex flex-col space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-blue-600">
+                        Age: {p.price}
+                      </span>
+                    </div>
+                    <div className="flex space-x-2">
                       <Button
                         type="primary"
-                        size="small"
+                        icon={<InfoCircleOutlined />}
+                        className="flex-1 bg-blue-500 hover:bg-blue-600 transition-colors"
                         onClick={() => navigate(`/product/${p.slug}`)}
-                        className="w-full sm:w-auto"
                       >
                         Details
                       </Button>
                       <Button
                         type="default"
-                        size="small"
+                        icon={<PlusCircleOutlined />}
+                        className="flex-1 border-blue-500 text-blue-500 hover:bg-blue-50 transition-colors"
                         onClick={() => {
                           addToCart(p);
-                          toast.success("Patient added to Critical");
+                          toast.success("Patient added to Critical", {
+                            style: {
+                              background: "#4B5563",
+                              color: "#fff",
+                            },
+                          });
                         }}
-                        className="w-full sm:w-auto"
                       >
                         Add to Critical
                       </Button>
@@ -258,18 +290,18 @@ function HomePage() {
             </div>
 
             {/* Load More Button - Responsive */}
-            <div className="mt-8 text-center">
+            <div className="mt-10 text-center">
               {products && shouldRenderButton && products.length < total && (
                 <Button
                   type="primary"
                   loading={loading}
-                  className="w-full sm:w-auto"
+                  className="px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 transition-all duration-300"
                   onClick={(e) => {
                     e.preventDefault();
                     setPage(page + 1);
                   }}
                 >
-                  {loading ? "Loading..." : "Load More"}
+                  {loading ? "Loading..." : "Load More Patients"}
                 </Button>
               )}
             </div>
