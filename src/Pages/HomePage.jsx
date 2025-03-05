@@ -263,38 +263,31 @@ function HomePage() {
                       </p>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <Tooltip title="View Full Patient Details">
-                        <Button
-                          type="default"
-                          icon={<FileSearchOutlined />}
-                          className="w-full text-blue-600 border-blue-600 hover:bg-blue-50"
-                          onClick={() => navigate(`/product/${patient.slug}`)}
-                        >
-                          Details
-                        </Button>
-                      </Tooltip>
+                    <div className="flex flex-col lg:flex-row gap-4 w-full">
+                      {/* Details Button */}
+                      <button
+                        className="w-full lg:w-1/2 text-blue-600 border-2 border-blue-600 hover:bg-blue-50 px-4 py-2 rounded transition duration-300 ease-in-out"
+                        onClick={() => navigate(`/product/${patient.slug}`)}
+                      >
+                        Details
+                      </button>
 
-                      <Tooltip title="Add to Critical Patients List">
-                        <Button
-                          type="primary"
-                          icon={<PlusCircleOutlined />}
-                          className="w-full bg-green-500 hover:bg-green-600 md:p-3 md:m-2"
-                          onClick={() => {
-                            addToCart(patient);
-                            toast.success("Patient Added to Critical List", {
-                              style: {
-                                background: "#2C3E50",
-                                color: "#fff",
-                              },
-                              icon: "🏥",
-                            });
-                          }}
-                        >
-                          Critical List
-                        </Button>
-                      </Tooltip>
+                      {/* Critical List Button */}
+                      <button
+                        className="w-full lg:w-1/2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-300 ease-in-out"
+                        onClick={() => {
+                          addToCart(patient);
+                          toast.success("Patient Added to Critical List", {
+                            style: {
+                              background: "#2C3E50",
+                              color: "#fff",
+                            },
+                            icon: "🏥",
+                          });
+                        }}
+                      >
+                        Add to Critical List
+                      </button>
                     </div>
                   </div>
                 </div>
