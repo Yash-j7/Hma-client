@@ -274,7 +274,7 @@ function HomePage() {
 
                       {/* Critical List Button */}
                       <button
-                        className="w-full lg:w-1/2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-300 ease-in-out"
+                        className="w-full lg:w-1/2 bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded transition duration-300 ease-in-out"
                         onClick={() => {
                           addToCart(patient);
                           toast.success("Patient Added to Critical List", {
