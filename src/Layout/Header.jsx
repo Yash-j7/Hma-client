@@ -131,7 +131,8 @@ function Header() {
           )}
 
           {/* Search and Cart */}
-          <div className="flex items-center space-x-4">
+          {/* Desktop Navigation Section */}
+          <div className="hidden lg:flex items-center space-x-4">
             <SearchForm />
             <NavLink
               to="/cart"
@@ -139,6 +140,23 @@ function Header() {
             >
               <AlertOutlined />
               <span>Critical: {cart?.length}</span>
+            </NavLink>
+          </div>
+
+          {/* Mobile Navigation Section */}
+          <div className="lg:hidden flex items-center space-x-2">
+            <div className="flex-grow mr-2">
+              <SearchForm />
+            </div>
+            <NavLink
+              to="/cart"
+              className="bg-red-500 text-white px-3 py-2 rounded-full flex items-center justify-center 
+      w-12 h-12 hover:bg-red-600 transition-colors"
+            >
+              <div className="flex flex-col items-center">
+                <AlertOutlined className="text-lg" />
+                <span className="text-xs -mt-1">{cart?.length}</span>
+              </div>
             </NavLink>
           </div>
         </nav>

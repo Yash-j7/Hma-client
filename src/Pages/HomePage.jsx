@@ -280,7 +280,7 @@ function HomePage() {
                         <Button
                           type="primary"
                           icon={<PlusCircleOutlined />}
-                          className="w-full bg-green-500 hover:bg-green-600"
+                          className="w-full bg-green-500 hover:bg-green-600 md:p-3 md:m-2"
                           onClick={() => {
                             addToCart(patient);
                             toast.success("Patient Added to Critical List", {
