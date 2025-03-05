@@ -8,10 +8,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import {
-  FilterOutlined,
-  InfoCircleOutlined,
+  UserOutlined,
+  HeartOutlined,
+  MedicalCrossOutlined,
+  FileSearchOutlined,
   PlusCircleOutlined,
-  ReloadOutlined,
 } from "@ant-design/icons";
 const { Meta } = Card;
 
@@ -226,71 +227,75 @@ function HomePage() {
               Patient Management
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products?.map((p) => (
-                <Card
-                  key={p._id}
-                  hoverable
-                  className="rounded-xl shadow-lg overflow-hidden 
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products?.map((patient) => (
+                <div
+                  key={patient._id}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden 
                     transform transition-all duration-300 
                     hover:scale-105 hover:shadow-2xl 
-                    group bg-white"
-                  cover={
-                    <div className="overflow-hidden">
-                      <img
-                        alt={p.name}
-                        src={`https://hma-backend.onrender.com/api/v1/product/product-photo/${p._id}`}
-                        className="h-48 sm:h-56 lg:h-64 w-full object-cover 
-                          transition-transform duration-300 
-                          group-hover:scale-110"
-                      />
-                    </div>
-                  }
+                    border border-gray-100"
                 >
-                  <Meta
-                    title={
-                      <div className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                        {p.name}
-                      </div>
-                    }
-                  />
-                  <div className="mt-3 text-sm text-gray-600 line-clamp-2">
-                    {truncateDescription(p.description)}
-                  </div>
-                  <div className="mt-4 flex flex-col space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-blue-600">
-                        Age: {p.price}
-                      </span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        type="primary"
-                        icon={<InfoCircleOutlined />}
-                        className="flex-1 bg-blue-500 hover:bg-blue-600 transition-colors"
-                        onClick={() => navigate(`/product/${p.slug}`)}
-                      >
-                        Details
-                      </Button>
-                      <Button
-                        type="default"
-                        icon={<PlusCircleOutlined />}
-                        className="flex-1 border-blue-500 text-blue-500 hover:bg-blue-50 transition-colors"
-                        onClick={() => {
-                          addToCart(p);
-                          toast.success("Patient added to Critical", {
-                            style: {
-                              background: "#4B5563",
-                              color: "#fff",
-                            },
-                          });
-                        }}
-                      >
-                        Add to Critical
-                      </Button>
+                  {/* Patient Image */}
+                  <div className="relative">
+                    <img
+                      src={`https://hma-backend.onrender.com/api/v1/product/product-photo/${patient._id}`}
+                      alt={patient.name}
+                      className="w-full h-56 object-cover"
+                    />
+                    <div className="absolute top-4 right-4 flex space-x-2">
+                      <Tag color="blue" className="opacity-90">
+                        <UserOutlined /> {patient.price} Years
+                      </Tag>
                     </div>
                   </div>
-                </Card>
+
+                  {/* Patient Details */}
+                  <div className="p-5">
+                    <div className="mb-4">
+                      <h2 className="text-xl font-bold text-gray-800 mb-2">
+                        {patient.name}
+                      </h2>
+                      <p className="text-gray-600 text-sm line-clamp-3">
+                        {patient.description}
+                      </p>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <Tooltip title="View Full Patient Details">
+                        <Button
+                          type="default"
+                          icon={<FileSearchOutlined />}
+                          className="w-full text-blue-600 border-blue-600 hover:bg-blue-50"
+                          onClick={() => navigate(`/product/${patient.slug}`)}
+                        >
+                          Details
+                        </Button>
+                      </Tooltip>
+
+                      <Tooltip title="Add to Critical Patients List">
+                        <Button
+                          type="primary"
+                          icon={<PlusCircleOutlined />}
+                          className="w-full bg-green-500 hover:bg-green-600"
+                          onClick={() => {
+                            addToCart(patient);
+                            toast.success("Patient Added to Critical List", {
+                              style: {
+                                background: "#2C3E50",
+                                color: "#fff",
+                              },
+                              icon: "🏥",
+                            });
+                          }}
+                        >
+                          Critical List
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
 
