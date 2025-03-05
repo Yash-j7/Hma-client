@@ -23,13 +23,13 @@ function SearchForm() {
   return (
     <div className="w-full px-4">
       <form
-        className="flex flex-wrap items-center gap-2 justify-between"
+        className="flex flex-col sm:flex-row sm:items-center gap-2"
         onSubmit={handleSubmit}
       >
         {/* Search Input */}
         <input
           type="text"
-          className="flex-grow w-full lg:w-auto px-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full sm:flex-grow px-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Search..."
           value={values.keyword}
           onChange={(e) => setValues({ ...values, keyword: e.target.value })}
@@ -38,7 +38,7 @@ function SearchForm() {
         {/* Search Button */}
         <button
           type="submit"
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600 transition duration-300 flex-shrink-0"
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600 transition duration-300 sm:flex-shrink-0"
         >
           Search
         </button>
